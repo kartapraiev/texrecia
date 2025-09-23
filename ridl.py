@@ -29,7 +29,7 @@ def setup_driver():
     return driver
 
 def download_pdfs_for_keyword(driver, keyword):
-    base_url = "https://repositorio.ufpa.br/jspui"
+    base_url = "https://repositorio.ufpa.br/simple-search?query="
     
     print(f"Iniciando busca pela palavra-chave: '{keyword}'")
 
