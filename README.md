@@ -4,6 +4,7 @@ Este projeto consiste em um conjunto de duas ferramentas Python projetadas para 
 
 1.  **`ridl.py`**: Um web scraper para automatizar o download em massa de trabalhos de conclusão de curso (TCCs), dissertações e teses.
 2.  **`main.py`**: Um analisador de estilometria que examina o texto de um arquivo PDF para identificar padrões e marcadores linguísticos comumente associados a modelos de linguagem de IA generativa.
+3.  **`app.py` & `index.html`**: Uma interface gráfica web para usar o analisador de forma fácil e intuitiva, diretamente no navegador.
 
 O objetivo do projeto é permitir a coleta de um corpo de textos acadêmicos e, em seguida, analisá-los individualmente em busca de indícios de geração por inteligência artificial.
 
@@ -39,70 +40,92 @@ O script utiliza as bibliotecas **Selenium** para controlar um navegador web (Go
 
 Este script analisa o conteúdo textual de um único arquivo PDF para avaliar a probabilidade de ter sido gerado por um modelo de IA.
 
-#### Propósito
+### 3\. `app.py` - Servidor da Interface Gráfica
 
-Fornecer uma análise estatística e baseada em marcadores sobre o estilo de escrita de um documento. Ele serve como uma ferramenta auxiliar para identificar textos que se desviam dos padrões de escrita humana e se alinham com os de IAs conhecidas.
+Este script utiliza o micro-framework **Flask** para criar um servidor web local. Ele é responsável por:
 
-#### Funcionamento
-
-O script utiliza a biblioteca **pdfplumber** para extrair texto de arquivos PDF e realiza uma série de análises.
-
-1.  **Extração e Pré-processamento**:
-      * O script abre o arquivo PDF especificado e extrai todo o seu conteúdo textual.
-      * O texto é "limpo": convertido para minúsculas, e a maioria dos caracteres especiais e pontuações é removida para focar apenas nas palavras.
-2.  **Análise de Frequência**: Conta as palavras mais comuns no documento para dar uma visão geral do vocabulário utilizado.
-3.  **Detecção de Marcadores (Stylometry)**:
-      * O núcleo da análise. O script possui dicionários pré-definidos com palavras e frases ("marcadores") que são estatisticamente mais comuns em textos gerados por IAs como **ChatGPT**, **Gemini**, e **DeepSeek**.
-      * Exemplos de marcadores incluem "é importante destacar que", "em suma" (geral), "robusto", "alavancar", "tapeçaria" (ChatGPT), entre outros.
-4.  **Cálculo de Pontuação**:
-      * O script varre o texto em busca desses marcadores.
-      * Uma pontuação é atribuída com base no número de marcadores encontrados. Frases têm um peso maior que palavras isoladas.
-      * Uma **pontuação normalizada** (ocorrências a cada 1000 palavras) é calculada para permitir a comparação justa entre documentos de diferentes tamanhos.
-5.  **Geração de Relatório**:
-      * Um relatório é impresso no terminal, contendo:
-          * O total de palavras analisadas.
-          * As palavras mais frequentes.
-          * A detecção de caracteres "ocultos" ou de formatação especial.
-          * Uma conclusão sobre o "autor mais provável" (a IA com a maior pontuação normalizada).
-          * Um detalhamento dos marcadores específicos encontrados para cada modelo de IA.
+  * Exibir a página da interface (`index.html`).
+  * Receber o arquivo PDF enviado pelo usuário.
+  * Chamar o script `main.py` em segundo plano para realizar a análise.
+  * Retornar o relatório gerado para ser exibido na página.
 
 ## Como Usar
 
-### Pré-requisitos
+Existem duas maneiras de usar as ferramentas: através da interface gráfica (recomendado) ou via linha de comando.
+
+### Modo 1: Interface Gráfica
+
+Este modo é o mais simples e ideal para analisar arquivos individualmente.
+
+#### Pré-requisitos
 
   * Python 3.x instalado.
-  * Navegador Google Chrome instalado.
+  * Navegador Google Chrome instalado (apenas para o downloader `ridl.py`).
 
-### Instalação
+#### Instalação
 
-Abra seu terminal ou prompt de comando e instale as bibliotecas necessárias:
+Abra seu terminal ou prompt de comando e instale todas as bibliotecas necessárias com um único comando:
 
 ```bash
-pip install selenium webdriver-manager requests pdfplumber
+pip install selenium webdriver-manager requests pdfplumber Flask
 ```
 
-### Execução Passo a Passo
+#### Execução
 
 **Passo 1: Baixar os Documentos**
 
-Execute o script `ridl.py` para começar o download dos TCCs. Ele criará pastas no mesmo diretório onde o script está localizado.
+Se você ainda não tem os PDFs para analisar, execute o script `ridl.py` para baixar os TCCs do repositório.
 
 ```bash
 python ridl.py
 ```
 
-Aguarde a conclusão. Este processo pode demorar dependendo da sua conexão com a internet e da quantidade de documentos.
+Aguarde a conclusão. Os arquivos serão salvos em pastas como `Direito/`, `Letras/`, etc.
 
-**Passo 2: Analisar um Documento**
+**Passo 2: Iniciar o Servidor da Aplicação Web**
 
-Após o download, escolha um dos PDFs baixados e use o script `main.py` para analisá-lo. Você deve passar o caminho do arquivo como um argumento na linha de comando.
+No seu terminal, execute o script `app.py`:
 
-Por exemplo, para analisar um arquivo chamado `"TCC sobre Direito Digital.pdf"` que foi salvo na pasta `Direito`:
+```bash
+python app.py
+```
+
+Você verá uma mensagem indicando que o servidor está rodando, algo como `Running on http://127.0.0.1:5000`.
+
+**Passo 3: Usar a Interface no Navegador**
+
+1.  Abra seu navegador de internet (Chrome, Firefox, etc.).
+2.  Acesse o endereço: **[http://127.0.0.1:5000](https://www.google.com/url?sa=E&source=gmail&q=http://127.0.0.1:5000)**
+3.  Na página, clique para selecionar um arquivo PDF ou simplesmente arraste e solte o arquivo na área indicada.
+4.  Clique no botão **"Analisar Arquivo"**.
+5.  Aguarde alguns segundos enquanto a análise é processada. O relatório completo aparecerá na tela.
+
+### Modo 2: Linha de Comando (Uso Avançado)
+
+Este modo é útil para automação ou se você preferir não usar a interface gráfica.
+
+#### Instalação
+
+As mesmas do modo gráfico. Se você já instalou, não precisa fazer novamente.
+
+```bash
+pip install selenium webdriver-manager requests pdfplumber
+```
+
+#### Execução
+
+**Passo 1: Baixar os Documentos**
+
+Use o script `ridl.py` conforme descrito no modo anterior.
+
+**Passo 2: Analisar um Documento via Terminal**
+
+Execute o script `main.py` passando o caminho do arquivo PDF como um argumento.
+
+Por exemplo, para analisar um arquivo chamado `"TCC sobre Direito Digital.pdf"` salvo na pasta `Direito`:
 
 ```bash
 python main.py "Direito/TCC sobre Direito Digital.pdf"
 ```
 
 O relatório da análise será exibido diretamente no seu terminal.
-
------
