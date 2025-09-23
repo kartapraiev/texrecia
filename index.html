@@ -133,7 +133,6 @@
         const dropZone = document.getElementById('drop-zone');
         const fileLabel = document.getElementById('file-label');
 
-        // Habilitar o botão quando um arquivo for selecionado
         pdfFileInput.addEventListener('change', () => {
             if (pdfFileInput.files.length > 0) {
                 fileNameDiv.textContent = `Arquivo selecionado: ${pdfFileInput.files[0].name}`;
@@ -144,7 +143,6 @@
             }
         });
 
-        // Funcionalidade de arrastar e soltar
         dropZone.addEventListener('dragover', (event) => {
             event.preventDefault();
             dropZone.style.backgroundColor = '#f0f8ff';
@@ -164,17 +162,14 @@
             const files = event.dataTransfer.files;
             if (files.length > 0) {
                 pdfFileInput.files = files;
-                // Dispara o evento 'change' manualmente
                 pdfFileInput.dispatchEvent(new Event('change'));
             }
         });
 
 
-        // Ação ao submeter o formulário
         uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Prepara a interface para a análise
             resultsDiv.style.display = 'none';
             resultsDiv.textContent = '';
             resultsDiv.classList.remove('error');
@@ -202,7 +197,6 @@
                 resultsDiv.classList.add('error');
                 resultsDiv.textContent = `Falha na análise: ${error.message}`;
             } finally {
-                // Restaura a interface após a análise
                 loader.style.display = 'none';
                 resultsDiv.style.display = 'block';
                 analyzeBtn.disabled = false;
