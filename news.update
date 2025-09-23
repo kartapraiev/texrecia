@@ -1,0 +1,9 @@
+Novidades da versão 1.42:
+    Ajuste do nome e sigla da instituição no arquivo dspace/config/input-forms.xml
+    Ajuste do ip/domínio do servidor no arquivo build.properties
+    
+Novidades da versão 1.5:
+    Correção de algumas janelas de diálogo
+    Atualização de senha do banco de dados automática
+    Inclusão de instalação automática do pacote JDK em caso de ausência do mesmo
+    Revisão de configuração da logo do repositório
