@@ -1,0 +1,13 @@
+{
+  "name": "texrecia",
+  "version": "1.0.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "texrecia",
+      "version": "1.0.0",
+      "license": "MIT"
+    }
+  }
+}
